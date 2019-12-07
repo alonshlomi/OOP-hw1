@@ -31,7 +31,7 @@ public class ComplexFunction implements complex_function {
 		this.op = (op==null) ? Operation.None : op;
 	}
 	
-	
+	//Init operator from string
 	public ComplexFunction(String op_str, function f1, function f2) {
 		if(f1 == null) throw new RuntimeException("Cannot init null function!");
 		Operation op = Operation.None;
@@ -57,6 +57,7 @@ public class ComplexFunction implements complex_function {
 		default:
 			throw new RuntimeException("Invalid operation: "+op_str);
 		}
+		
 		this.f1 = f1;
 		this.f2 = f2;
 		this.op = op;
@@ -92,16 +93,27 @@ public class ComplexFunction implements complex_function {
 	@Override
 	public function initFromString(String s) {
 		try {
+		
 		Stack<Character> st = new Stack<Character>();
 		int left = s.indexOf('(');
 		int right = s.lastIndexOf(')');
 		
+		/*
+		 * Stop condition:
+		 * if there is no parenthesis probably its a Polynom,
+		 * it will handle invalid input in our Polynom class.
+		 */
 		if(left == -1 || right == -1) {
 			return new Polynom(s);
 		}
 		
-		String op_str = s.substring(0, left);
-		String next_func = s.substring(left+1, right);
+		String op_str = s.substring(0, left); 			//Substring that contains the operation .
+		String next_func = s.substring(left+1, right);	//Substring that contains 2 functions with comma between that will be the split parameter later.
+		
+		/*
+		 * Checking if we have the same amount of open and close parenthesis
+		 * using stack, and then we can get the comma we need.
+		 */
 		int i;
 		for(i = 0;i<next_func.length();i++) {
 			if(st.isEmpty() && next_func.charAt(i) == ',') {
@@ -118,11 +130,13 @@ public class ComplexFunction implements complex_function {
 			}
 		}
 		
-		String f1_str = next_func.substring(0,i+1);
-		String f2_str = next_func.substring(i+2,next_func.length());
+		String f1_str = next_func.substring(0,i+1);					//Substring that contains the first function without the comma.
+		String f2_str = next_func.substring(i+2,next_func.length());//Substring that contains the second function without the comma.
 		
-		function f1 = this.initFromString(f1_str);
+		//Recursive call:
+		function f1 = this.initFromString(f1_str);	
 		function f2 = this.initFromString(f2_str);
+		
 		
 		return new ComplexFunction(op_str, f1, f2);
 		} catch (Exception e) {
@@ -139,6 +153,11 @@ public class ComplexFunction implements complex_function {
 
 	@Override
 	public void plus(function f1) {
+		/*
+		 * If we have f2, put in this.f1 the whole function and put f1 in this.f2,
+		 * otherwise, put the f1 we received in this.f2 .
+		 * Init this.op with Plus .
+		 */
 		this.f1 = (this.f2 != null) ? this.copy() : this.f1;
 		this.f2 = f1;
 		this.op = Operation.Plus;
@@ -180,13 +199,22 @@ public class ComplexFunction implements complex_function {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof ComplexFunction)) return false;
 		
+		if (!(obj instanceof ComplexFunction))
+			return false;
+
 		ComplexFunction other = (ComplexFunction) obj;
 		
-		if(this.f2==null&&other.f2==null) return this.f1.equals(other.f1);
-		if(this.f1==null || this.f2==null) return false;
+		if (this.f2 == null && other.f2 == null) //Checking if we have only 1 function in both complex functions.
+			return this.f1.equals(other.f1);
+		if (this.f1 == null || this.f2 == null)
+			return false;
 		
+		//If our operation is plus/mul/max/min, the functions order doesnt matter .
+		if(this.op.equals(other.op) && (this.op == Operation.Plus || this.op == Operation.Times || this.op == Operation.Max || this.op == Operation.Min)) {
+			return (this.f1.equals(other.f1) && this.f2.equals(other.f2)) || (this.f1.equals(other.f2) && this.f2.equals(other.f1));
+		}
+		//Otherwise -
 		return (this.f1.equals(other.f1)) && (this.f2.equals(other.f2)) && (this.op.equals(other.op));
 	}
 	

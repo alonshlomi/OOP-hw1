@@ -27,12 +27,12 @@ public class Functions_GUI implements functions {
 	public Functions_GUI() {
 		functions = new LinkedList<function>();
 	}
-	
+
 	public Functions_GUI(Collection<? extends function> c) {
 		functions = new LinkedList<function>();
 		addAll(c);
 	}
-	
+
 	@Override
 	public int size() {
 		return functions.size();
@@ -125,25 +125,26 @@ public class Functions_GUI implements functions {
 
 	@Override
 	public void drawFunctions(int width, int height, Range rx, Range ry, int resolution) {
-
-		StdDraw.setCanvasSize(width, height);
+		
+		StdDraw.setCanvasSize(width, height);	// Init window size
 
 		double minX = rx.get_min(), maxX = rx.get_max();
 		double minY = ry.get_min(), maxY = ry.get_max();
 
 		// Scales
-		StdDraw.setXscale(minX, maxX);
-		StdDraw.setYscale(minY, maxY);
-		Font font = new Font("Arial", 0 ,15);
+		StdDraw.setXscale(minX, maxX);	// Init X's range
+		StdDraw.setYscale(minY, maxY);	// Init Y's range
+		Font font = new Font("Arial", 0, 15);
 		StdDraw.setFont(font);
 		
+		// Draw squares:
 		StdDraw.setPenRadius(0.001);
 		StdDraw.setPenColor(Color.LIGHT_GRAY);
-		for(int i = (int) rx.get_min();i<rx.get_max();i++) {
+		for (int i = (int) rx.get_min(); i < rx.get_max(); i++) {
 			StdDraw.line(i, ry.get_min(), i, ry.get_max());
 			StdDraw.line(rx.get_min(), i, rx.get_max(), i);
 		}
-		
+
 		// x axis
 		StdDraw.setPenRadius(0.005);
 		StdDraw.setPenColor();
@@ -152,18 +153,20 @@ public class Functions_GUI implements functions {
 			StdDraw.text(i, 0, "|");
 			StdDraw.text(i, -0.6, Integer.toString(i));
 		}
+		
 		// y axis
 		StdDraw.line(0, minY, 0, maxY);
 		for (int i = (int) minY; i <= maxY; i++) {
 			StdDraw.text(0, i, "-");
 			StdDraw.text(-0.4, i, Integer.toString(i));
 		}
-		StdDraw.setPenRadius(0.003);
+
 		// draw functions
+		StdDraw.setPenRadius(0.003);
 		for (int i = 0; i < this.functions.size(); i++) {
 			function curr_f = this.functions.get(i);
-			Color curr_c = Colors[i%7];
-			double steps = (maxX - minX) / resolution;
+			Color curr_c = Colors[i % 7];
+			double steps = (maxX - minX) / resolution;	// Distance between x's
 
 			StdDraw.setPenColor(curr_c);
 
@@ -172,37 +175,31 @@ public class Functions_GUI implements functions {
 				double x0 = j, y0 = curr_f.f(x0);
 				double x1 = j + steps, y1 = curr_f.f(x1);
 
-				StdDraw.line(x0, y0, x1, y1);
+				StdDraw.line(x0, y0, x1, y1);	// Draw line between 2 coordinates .
 
 			}
-			System.out.println(i+1+") "+curr_c+"\tf(x) = "+curr_f);
+			System.out.println(i + 1 + ") " + curr_c + "\tf(x) = " + curr_f); // Print the color and the function .
 
 		}
 	}
 
 	@Override
 	public void drawFunctions(String json_file) {
-		// default values
-		int width = 500, height = 500, resolution = 1000;
+		// Default values:
+		int width = 700, height = 700, resolution = 1000;
 		Range rx = new Range(-10, 10);
 		Range ry = new Range(-10, 10);
 
 		try {
-			f = new File(json_file);
-			in = new FileReader(f);
-			br = new BufferedReader(in);
-			String json_str = "", line;
-
-			while ((line = br.readLine()) != null)
-				json_str += line;
+			in = new FileReader(json_file);
 
 			Gson g = new Gson();
-			JsonParam jp = g.fromJson(json_str, JsonParam.class);
-
+			JsonParam jp = g.fromJson(in, JsonParam.class);	// Init json parameters into JsonParam class .
+			
 			width = jp.getWidth();
 			height = jp.getHeight();
-			rx = jp.getRX();
-			ry = jp.getRY();
+			rx = new Range(jp.getRX()[0], jp.getRX()[1]);
+			ry = new Range(jp.getRY()[0], jp.getRY()[1]);
 			resolution = jp.getReso();
 
 		} catch (Exception e) {
@@ -212,31 +209,30 @@ public class Functions_GUI implements functions {
 		drawFunctions(width, height, rx, ry, resolution);
 
 	}
-
+	
 	public static void main(String[] args) throws IOException {
-		Range rx=new Range(-10,10);
-		Range ry=new Range(-10,10);
-		Functions_GUI f= new Functions_GUI();
-//		f.initFromFile("test.txt");
-//		f.saveToFile("mosh.txt");
 
-		function f1=new Polynom("2x^2");
-		function f2=new Polynom("5x^3+5x-5");
-		function f3=new Polynom("5x");
-		function f4=new Polynom("-2x^2-4");
-		function cf=new ComplexFunction();
-		cf=cf.initFromString("div(plus(2.0x^4-3.0x,5.0x),mul(7.0x^3,3.0x))");
+		Functions_GUI f = new Functions_GUI();
+
+
+		function f1 = new Polynom("2x^2");
+		function f2 = new Polynom("5x^3+5x-5");
+		function f3 = new Polynom("5x");
+		function f4 = new Polynom("-2x^2-4");
+		function cf = new ComplexFunction();
+		cf = cf.initFromString("div(plus(2.0x^4-3.0x,5.0x),mul(7.0x^3,3.0x))");
 		f.functions.add(f1);
 		f.functions.add(f2);
 		f.functions.add(f3);
 		f.functions.add(f4);
 		f.functions.add(cf);
-		f.drawFunctions(700,700,rx,ry,1000);
+		f.drawFunctions("a.json");
 	}
 
 	private class JsonParam {
 		int width, height, resolution;
-		Range rx, ry;
+		double[] rx = new double[2];
+		double[] ry = new double[2];
 
 		public int getWidth() {
 			return width;
@@ -250,11 +246,11 @@ public class Functions_GUI implements functions {
 			return resolution;
 		}
 
-		public Range getRX() {
+		public double[] getRX() {
 			return rx;
 		}
 
-		public Range getRY() {
+		public double[] getRY() {
 			return ry;
 		}
 
