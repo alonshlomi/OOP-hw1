@@ -85,7 +85,7 @@ public class Monom implements function {
 			throw new RuntimeException("Too much x's!");
 		}
 
-		if (s.isBlank()) {
+		if (s.isEmpty()) {
 			throw new RuntimeException("Blank string");
 		}
 		if (s.equals("x")) {
@@ -126,7 +126,7 @@ public class Monom implements function {
 			try {
 				if (arr[0].equals("-"))
 					arr[0] = "-1";
-				if (arr[0].isBlank())
+				if (arr[0].isEmpty())
 					arr[0] = "1";
 				coe = Double.parseDouble(arr[0]);
 				pow = Integer.parseInt(arr[1]);

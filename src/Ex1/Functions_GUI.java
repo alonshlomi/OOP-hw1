@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import com.google.gson.Gson;
 
 public class Functions_GUI implements functions {
-
+	
 	private LinkedList<function> functions;
 	private static File f;
 	private static FileReader in;

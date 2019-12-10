@@ -2,3 +2,4 @@
 *.txt
 /bin/*.class
 /bin/Ex1/*.class
+/bin/
