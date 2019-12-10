@@ -19,16 +19,16 @@ public class ComplexFunction implements complex_function {
 	
 	public ComplexFunction(function f1) {
 		if(f1 == null) throw new RuntimeException("Cannot init null function!");
-		this.f1 = f1;
+		this.f1 = f1.copy();
 		this.f2 = null;
 		this.op = Operation.None;
 	}
 	
 	public ComplexFunction(Operation op, function f1,function f2) {
 		if(f1 == null) throw new RuntimeException("Cannot init null function!");
-		this.f1 = f1;
-		this.f2 = f2;
-		this.op = (op==null) ? Operation.None : op;
+		this.f1 = f1.copy();
+		this.f2 = (f2 == null) ? null : f2.copy();
+		this.op = (f2 == null || op==null) ? Operation.None : op;
 	}
 	
 	//Init operator from string
@@ -58,9 +58,9 @@ public class ComplexFunction implements complex_function {
 			throw new RuntimeException("Invalid operation: "+op_str);
 		}
 		
-		this.f1 = f1;
-		this.f2 = f2;
-		this.op = op;
+		this.f1 = f1.copy();
+		this.f2 = (f2 == null) ? null : f2.copy();
+		this.op = (f2 == null || op==null) ? Operation.None : op;
 	}
 
 	//Methods:
@@ -158,42 +158,42 @@ public class ComplexFunction implements complex_function {
 		 * otherwise, put the f1 we received in this.f2 .
 		 * Init this.op with Plus .
 		 */
-		this.f1 = (this.f2 != null) ? this.copy() : this.f1;
-		this.f2 = f1;
+		this.f1 = (this.f2 != null) ? this.copy() : this.f1.copy();
+		this.f2 = f1.copy();
 		this.op = Operation.Plus;
 	}
 
 	@Override
 	public void mul(function f1) {
-		this.f1 = (this.f2 != null) ? this.copy() : this.f1;
-		this.f2 = f1;
+		this.f1 = (this.f2 != null) ? this.copy() : this.f1.copy();
+		this.f2 = f1.copy();
 		this.op = Operation.Times;		
 	}
 
 	@Override
 	public void div(function f1) {
-		this.f1 = (this.f2 != null) ? this.copy() : this.f1;
-		this.f2 = f1;
+		this.f1 = (this.f2 != null) ? this.copy() : this.f1.copy();
+		this.f2 = f1.copy();
 		this.op = Operation.Divid;
 	}
 
 	@Override
 	public void max(function f1) {
-		this.f1 = (this.f2 != null) ? this.copy() : this.f1;
-		this.f2 = f1;
+		this.f1 = (this.f2 != null) ? this.copy() : this.f1.copy();
+		this.f2 = f1.copy();
 		this.op = Operation.Max;	
 	}
 
 	@Override
 	public void min(function f1) {
-		this.f1 = (this.f2 != null) ? this.copy() : this.f1;
-		this.f2 = f1;
+		this.f1 = (this.f2 != null) ? this.copy() : this.f1.copy();
+		this.f2 = f1.copy();
 		this.op = Operation.Min;	}
 
 	@Override
 	public void comp(function f1) {
-		this.f1 = (this.f2 != null) ? this.copy() : this.f1;
-		this.f2 = f1;
+		this.f1 = (this.f2 != null) ? this.copy() : this.f1.copy();
+		this.f2 = f1.copy();
 		this.op = Operation.Comp;	
 	}
 

@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -209,25 +208,7 @@ public class Functions_GUI implements functions {
 		drawFunctions(width, height, rx, ry, resolution);
 
 	}
-	
-	public static void main(String[] args) throws IOException {
 
-		Functions_GUI f = new Functions_GUI();
-
-
-		function f1 = new Polynom("2x^2");
-		function f2 = new Polynom("5x^3+5x-5");
-		function f3 = new Polynom("5x");
-		function f4 = new Polynom("-2x^2-4");
-		function cf = new ComplexFunction();
-		cf = cf.initFromString("div(plus(2.0x^4-3.0x,5.0x),mul(7.0x^3,3.0x))");
-		f.functions.add(f1);
-		f.functions.add(f2);
-		f.functions.add(f3);
-		f.functions.add(f4);
-		f.functions.add(cf);
-		f.drawFunctions("a.json");
-	}
 
 	private class JsonParam {
 		int width, height, resolution;
