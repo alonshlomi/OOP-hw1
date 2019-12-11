@@ -92,6 +92,11 @@ public class ComplexFunction implements complex_function {
 
 	@Override
 	public function initFromString(String s) {
+		//Ignoring spaces:
+		s = s.replaceAll("\\s+(\\()", "(");
+		s = s.replaceAll("(\\))\\s+", ")");
+		s = s.trim();
+		
 		try {
 		
 		Stack<Character> st = new Stack<Character>();
@@ -107,8 +112,9 @@ public class ComplexFunction implements complex_function {
 			return new Polynom(s);
 		}
 		
+		
 		String op_str = s.substring(0, left); 			//Substring that contains the operation .
-		String next_func = s.substring(left+1, right);	//Substring that contains 2 functions with comma between that will be the split parameter later.
+		String next_func = s.substring(left+1,s.length()-1);	//Substring that contains 2 functions with comma between that will be the split parameter later.
 		
 		/*
 		 * Checking if we have the same amount of open and close parenthesis

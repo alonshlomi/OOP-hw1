@@ -87,7 +87,7 @@ public class Monom implements function {
 		}
 
 		if (s.isEmpty()) {
-			throw new RuntimeException("Blank string");
+			throw new RuntimeException("Empty string");
 		}
 		if (s.equals("x")) {
 			set_coefficient(1);
