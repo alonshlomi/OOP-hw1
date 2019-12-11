@@ -81,6 +81,7 @@ public class Monom implements function {
 		double coe = 0;
 		int pow = 0;
 		s = s.trim();
+		s = s.replaceAll("-(\\s)+", "-");
 		if (s.indexOf("x") != s.lastIndexOf("x")) {
 			throw new RuntimeException("Too much x's!");
 		}

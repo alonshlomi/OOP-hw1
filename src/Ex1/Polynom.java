@@ -17,7 +17,6 @@ import Ex1.Monom;
 public class Polynom implements Polynom_able {
 
 	private LinkedList<Monom> poly;
-	private static final Comparator<Monom> _Comp = new Monom_Comperator();
 
 	/**
 	 * Zero (empty polynom)
@@ -27,16 +26,16 @@ public class Polynom implements Polynom_able {
 	}
 
 	/**
-	 * init a Polynom from a String such as: {"x", "3+1.4X^3-34x",
-	 * "(2x^2-4)*(-1.2x-7.1)", "(3-3.4x+1)*((3.1x-1.2)-(3X^2-3.1))"};
+	 * init a Polynom from a String such as: {"x", "3+1.4X^3-34x"};
 	 * 
 	 * @param s: is a string represents a Polynom
 	 */
 	public Polynom(String s) {
 		poly = new LinkedList<Monom>();
 		String[] arr = s.split("(?=-)|(\\+)");
-		for(int i=0;i<arr.length;i++) {
-			poly.add(new Monom(arr[i]));
+
+		for (int i = 0; i < arr.length; i++) {
+			add(new Monom(arr[i]));
 		}
 	}
 
@@ -45,6 +44,7 @@ public class Polynom implements Polynom_able {
 	@Override
 	public double f(double x) {
 		double sum = 0;
+
 		for (int i = 0; i < poly.size(); i++) {
 			sum += poly.get(i).f(x);
 		}
@@ -54,6 +54,7 @@ public class Polynom implements Polynom_able {
 	@Override
 	public void add(Polynom_able p1) {
 		Iterator<Monom> p = p1.iteretor();
+
 		while (p.hasNext()) {
 			Monom m = new Monom(p.next());
 			this.add(m);
@@ -68,8 +69,9 @@ public class Polynom implements Polynom_able {
 				return;
 			}
 		}
-		this.poly.add(m1);
-		this.poly.sort(_Comp);
+
+		this.poly.add(new Monom(m1));
+		this.poly.sort(Monom._Comp);
 	}
 
 	public void subtract(Monom m1) {
@@ -79,14 +81,16 @@ public class Polynom implements Polynom_able {
 				return;
 			}
 		}
+
 		m1.multiply(Monom.MINUS1);
-		this.poly.add(m1);
-		this.poly.sort(_Comp);
+		this.poly.add(new Monom(m1));
+		this.poly.sort(Monom._Comp);
 	}
 
 	@Override
 	public void substract(Polynom_able p1) {
 		Iterator<Monom> p = p1.iteretor();
+
 		while (p.hasNext()) {
 			Monom m = new Monom(p.next());
 			this.subtract(m);
@@ -96,8 +100,10 @@ public class Polynom implements Polynom_able {
 	@Override
 	public void multiply(Polynom_able p1) {
 		Polynom tmp = new Polynom();
+
 		for (int i = 0; i < this.poly.size(); i++) {
 			Iterator<Monom> p = p1.iteretor();
+
 			while (p.hasNext()) {
 				Monom m = new Monom(p.next());
 				Monom m1 = new Monom(this.poly.get(i));
@@ -107,25 +113,29 @@ public class Polynom implements Polynom_able {
 		}
 		poly = tmp.poly;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
-		if(obj==null || this == null) return false;
+		if (obj == null || this == null)
+			return false;
+
 		Polynom_able p = this.copy();
 		Polynom obj_p;
-		if(obj instanceof Polynom) {
+
+		if (obj instanceof Polynom) {
 			obj_p = (Polynom) obj;
 			p.substract(obj_p);
 			return p.isZero();
 		}
-		
-		if(obj instanceof Monom) {
+
+		if (obj instanceof Monom) {
 			obj_p = new Polynom(obj.toString());
 			p.substract(obj_p);
 			return p.isZero();
 		}
-		
-		if(!(obj instanceof Polynom_able)) return false;
+
+		if (!(obj instanceof Polynom_able))
+			return false;
 
 		Polynom_able other = (Polynom_able) obj;
 		p.substract(other);
@@ -144,10 +154,9 @@ public class Polynom implements Polynom_able {
 	@Override
 	public double root(double x0, double x1, double eps) {
 		if (this.f(x0) * this.f(x1) > 0) {
-			{
-				throw new RuntimeException("Invalid input: " + "f(" + x0 + ")*f(" + x1 + ")>0");
-			}
+			throw new RuntimeException("Invalid input: " + "f(" + x0 + ")*f(" + x1 + ")>0");
 		}
+
 		double h = x0;
 		while (x1 - x0 >= eps) {
 			h = (x0 + x1) / 2.0;
@@ -164,6 +173,7 @@ public class Polynom implements Polynom_able {
 	@Override
 	public Polynom_able copy() {
 		Polynom_able p = new Polynom();
+
 		for (int i = 0; i < poly.size(); i++) {
 			p.add(new Monom(poly.get(i)));
 		}
@@ -173,6 +183,7 @@ public class Polynom implements Polynom_able {
 	@Override
 	public Polynom_able derivative() {
 		Polynom_able p = new Polynom();
+
 		for (int i = 0; i < poly.size(); i++) {
 			p.add(poly.get(i).derivative());
 		}
@@ -183,6 +194,7 @@ public class Polynom implements Polynom_able {
 	public double area(double x0, double x1, double eps) {
 		double n = Math.abs((x1 - x0)) / eps;
 		double x_i, x_i_minus1, height, sum = 0;
+
 		for (int i = 1; i <= n; i++) {
 			x_i = (x0 + eps * i);
 			x_i_minus1 = (x0 + eps * (i - 1));
@@ -211,6 +223,7 @@ public class Polynom implements Polynom_able {
 		String ans = "";
 		if (this.isZero())
 			return "0";
+
 		for (int i = 0; i < poly.size(); i++) {
 			if (poly.get(i).isZero())
 				continue;
@@ -226,8 +239,5 @@ public class Polynom implements Polynom_able {
 		function ans = new Polynom(s);
 		return ans;
 	}
-
-
-
 
 }
