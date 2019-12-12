@@ -92,12 +92,11 @@ public class ComplexFunction implements complex_function {
 
 	@Override
 	public function initFromString(String s) {
+		try {
 		//Ignoring spaces:
 		s = s.replaceAll("\\s+(\\()", "(");
 		s = s.replaceAll("(\\))\\s+", ")");
 		s = s.trim();
-		
-		try {
 		
 		Stack<Character> st = new Stack<Character>();
 		int left = s.indexOf('(');

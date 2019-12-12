@@ -78,6 +78,8 @@ public class Monom implements function {
 	 * @param s is a string represents a Monom.
 	 */
 	public Monom(String s) {
+		if(s == null) throw new RuntimeException("Invalid input - null string");
+		
 		double coe = 0;
 		int pow = 0;
 		s = s.trim();
